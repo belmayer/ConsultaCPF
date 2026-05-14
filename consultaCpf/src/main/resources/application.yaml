@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: consultaCpf
+  
+server:
+  port: 8081
