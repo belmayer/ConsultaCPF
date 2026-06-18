@@ -1,6 +1,18 @@
-spring:
+﻿spring:
   application:
     name: consultaCpf
-  
+  datasource:
+    url: jdbc:sqlserver://host:port;instanceName=SQLDEV;databaseName=TesteConsultaCPF;encrypt=false
+    username: usuario
+    password: senha
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        physical_naming_strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
 server:
   port: 8081
