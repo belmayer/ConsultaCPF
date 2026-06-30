@@ -1,11 +1,11 @@
 package com.jucerja.consultaCpf.client;
 
+import com.jucerja.consultaCpf.dto.SoapResult;
 import com.jucerja.consultaCpf.soap.envelope.SoapBody;
 import com.jucerja.consultaCpf.soap.envelope.SoapEnvelope;
 import com.jucerja.consultaCpf.soap.request.ConsultaCPFRequest;
 import com.jucerja.consultaCpf.soap.response.ConsultaCPFResponse;
 import com.jucerja.consultaCpf.util.XmlParser;
-import com.jucerja.consultaCpf.dto.SoapResult;
 
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
@@ -106,18 +106,28 @@ public class CpfSoapClient {
                     );
 
             // =========================
+            // GUARDA O XML BRUTO (para auditoria em ConsultaCPFS09)
+            // =========================
+
+            String xmlBruto = response.getBody();
+
+            // =========================
             // XML -> OBJETO
             // =========================
 
             SoapEnvelope responseEnvelope =
-                    XmlParser.fromXml(
-                            response.getBody(),
-                            SoapEnvelope.class
-                    );
+                    XmlParser.fromXml(xmlBruto, SoapEnvelope.class);
 
-            return responseEnvelope
-                    .getBody()
-                    .getConsultaCPFResponse();
+            ConsultaCPFResponse consultaResponse =
+                    responseEnvelope
+                            .getBody()
+                            .getConsultaCPFResponse();
+
+            // =========================
+            // RETORNA XML + OBJETO JUNTOS
+            // =========================
+
+            return new SoapResult(xmlBruto, consultaResponse);
 
         } catch (HttpStatusCodeException e) {
 

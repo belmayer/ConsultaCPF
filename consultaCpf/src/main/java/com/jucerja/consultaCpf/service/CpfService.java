@@ -1,6 +1,7 @@
 package com.jucerja.consultaCpf.service;
 
 import com.jucerja.consultaCpf.client.CpfSoapClient;
+import com.jucerja.consultaCpf.dto.SoapResult;
 import com.jucerja.consultaCpf.soap.response.ConsultaCPFResponse;
 import com.jucerja.consultaCpf.soap.response.DadosCPF;
 
@@ -21,8 +22,11 @@ public class CpfService {
         // CHAMA SOAP
         // =========================
 
-        ConsultaCPFResponse response =
+        SoapResult soapResult =
                 soapClient.consultarCpf(cpf);
+
+        ConsultaCPFResponse response =
+                soapResult.response();
 
         // =========================
         // VALIDA RESPONSE
