@@ -2,6 +2,8 @@ package com.jucerja.consultaCpf.service;
 
 import com.jucerja.consultaCpf.client.CpfSoapClient;
 import com.jucerja.consultaCpf.dto.SoapResult;
+import com.jucerja.consultaCpf.entity.SituacaoCadastralCPF;
+import com.jucerja.consultaCpf.repository.SituacaoCadastralCPFRespository;
 import com.jucerja.consultaCpf.soap.response.ConsultaCPFResponse;
 import com.jucerja.consultaCpf.soap.response.DadosCPF;
 
@@ -15,6 +17,9 @@ public class CpfService {
 
     @Autowired
     private CpfSoapClient soapClient;
+
+    @Autowired
+    private SituacaoCadastralCPFRespository situacaoRepository;
 
     public String verificarSituacao(String cpf) {
 
@@ -64,14 +69,17 @@ public class CpfService {
         DadosCPF dadosCPF = listaCpf.get(0);
 
         // =========================
-        // PEGA SITUAÇÃO
+        // PEGA SITUAÇÃO (descrição vem da tabela de domínio)
         // =========================
 
         String codigoSituacao =
                 dadosCPF.getSituacaoCadastral();
 
         String descricaoSituacao =
-                traduzirSituacao(codigoSituacao);
+                situacaoRepository
+                        .findByCodigoSituacaoCPFCadastralRFB(codigoSituacao)
+                        .map(SituacaoCadastralCPF::getDescricao)
+                        .orElse("Situação desconhecida");
 
         // =========================
         // DEBUG
@@ -83,33 +91,5 @@ public class CpfService {
         System.out.println("Descrição Situação: " + descricaoSituacao);
 
         return descricaoSituacao;
-    }
-
-    // =========================
-    // TRADUZ CÓDIGO RFB
-    // =========================
-
-    private String traduzirSituacao(String codigo) {
-
-        return switch (codigo) {
-
-            case "0" -> "Regular";
-
-            case "1" -> "Cancelada por encerramento de espólio";
-
-            case "2" -> "Suspensa";
-
-            case "3" -> "Cancelada óbito sem espólio";
-
-            case "4" -> "Pendente de Regularização";
-
-            case "5" -> "Cancelada multiplicidade";
-
-            case "8" -> "Nula";
-
-            case "9" -> "Cancelada de ofício";
-
-            default -> "Situação desconhecida";
-        };
     }
 }
