@@ -5,6 +5,7 @@ import com.jucerja.consultaCpf.soap.envelope.SoapEnvelope;
 import com.jucerja.consultaCpf.soap.request.ConsultaCPFRequest;
 import com.jucerja.consultaCpf.soap.response.ConsultaCPFResponse;
 import com.jucerja.consultaCpf.util.XmlParser;
+import com.jucerja.consultaCpf.dto.SoapResult;
 
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
@@ -21,7 +22,7 @@ public class CpfSoapClient {
     private static final String URL =
             "http://rfb.hml.jucerja.rj.gov.br/services/ws09/ws09";
 
-    public ConsultaCPFResponse consultarCpf(String cpf) {
+    public SoapResult consultarCpf(String cpf) {
 
         try {
 
